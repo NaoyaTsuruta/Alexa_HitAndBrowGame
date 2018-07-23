@@ -83,7 +83,6 @@ const StartIntentHandler = {
             n[i] = array[r];
             array.splice(r,1);
         }
-
         handlerInput.attributesManager.setSessionAttributes({'number': n});
         
         const Speech = '私の考えている3桁の数字を当ててください。';
@@ -111,6 +110,12 @@ const NumberIntentHandler = {
         var hit = 0;
         var blow = 0;
         const number = handlerInput.attributesManager.getSessionAttributes().number;
+        if(!number){
+            return handlerInput.responseBuilder
+            .speak('まだゲームは始まってはいませんよ。まずは「スタート」と言ってください')
+            .reprompt('「スタート」と言ってください')
+            .getResponse();
+        }
         const ask = handlerInput.requestEnvelope.request.intent.slots.number.value;
         var asknum = [];
 
@@ -194,6 +199,13 @@ const HintIntentHandler = {
 
         const number = handlerInput.attributesManager.getSessionAttributes().number;
         //handlerInput.attributesManager.setSessionAttributes({'hint_al':'already'});
+        if(!number){
+            return handlerInput.responseBuilder
+            .speak('まだゲームは始まってはいませんよ。まずは「スタート」と言ってください')
+            .reprompt('「スタート」と言ってください')
+            .getResponse();
+        }
+        
         var hint = number[Math.floor(Math.random() * number.length)];
 
         const LaunchHintSpeech = '仕方ない、ヒントをあげましょう。特別ですよ？';
@@ -220,6 +232,12 @@ const AnserIntentHandler = {
     
     handle(handlerInput){
         const number = handlerInput.attributesManager.getSessionAttributes().number;
+        if(!number){
+            return handlerInput.responseBuilder
+            .speak('まだゲームは始まっていませんよ。まずは「スタート」と言ってください')
+            .reprompt('「スタート」と言ってください')
+            .getResponse();
+        }
 
         const AnserSpeech = '答えは' + number[0] + number[1] + number[2] + 'でした。' + '次は正解まで頑張って見ましょう！';
 
@@ -229,3 +247,14 @@ const AnserIntentHandler = {
                 .getResponse();
     }
 };
+
+const ErrorHandler = {
+    canHandle(handlerInput, error) {
+        return true;
+    },
+    handle(handlerInput, error) {
+        return handlerInput.responseBuilder
+            .speak('うまく行きませんでした、ごめんなさい。')
+            .getResponse();
+    }
+}
