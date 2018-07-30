@@ -15,6 +15,7 @@ exports.handler = async function (event, context) {
             AnserIntentHandler,
             StopIntentHandler,
         )
+        .addErrorHandlers(ErrorHandler)
         .create();
     }
     return skill.invoke(event);
@@ -217,7 +218,6 @@ const HintIntentHandler = {
             .speak(speech)
             .reprompt(AskSpeech)
             .getResponse();
-        
     }
 };
 
@@ -254,7 +254,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         return handlerInput.responseBuilder
-            .speak('うまく行きませんでした、ごめんなさい。')
+            .speak('うまくいきませんでした、ごめんなさい。')
             .getResponse();
     }
 }
